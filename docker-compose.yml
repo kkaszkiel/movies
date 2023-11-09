@@ -1,0 +1,21 @@
+services:
+  db:
+    build: movies_api/movies-db/.
+    env_file:
+      - movies_api/movies-db/.env.db
+    ports:
+      - "5432:5432"
+  api:
+    build: movies_api/.
+    ports:
+      - "8000:8000"
+    env_file:
+      - movies_api/.env
+    depends_on:
+      - db
+  web:
+    build: movies-app/.
+    ports:
+      - "3000:3000"
+    env_file:
+      - movies-app/.env
