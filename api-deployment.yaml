@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: api
+  template:
+    metadata:
+      labels:
+        name: api
+    spec:
+      initContainers:
+      - name: init-db
+        image: postgres:alpine3.18
+        command: ['sh', '-c', 'until pg_isready -h db -p 5432; do sleep 1; done;']
+      containers:
+        - envFrom:
+          - configMapRef:
+              name: api-configmap
+          -  secretRef:
+              name: api-secrets
+          image: kkaszkiel/movies_api
+          name: api
+          ports:
+            - containerPort: 8000
+              name: api
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+

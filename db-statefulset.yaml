@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+spec:
+  serviceName: db
+  replicas: 1
+  selector:
+    matchLabels:
+      name: db
+  template:
+    metadata:
+      labels:
+        name: db
+    spec:
+      containers:
+        - envFrom:
+          - configMapRef:
+              name: db-configmap
+          -  secretRef:
+              name: db-secrets
+          image: kkaszkiel/db
+          name: db
+          ports:
+            - containerPort: 5432
+              name: db
+          volumeMounts:
+            - name: db-pv-claim
+              mountPath: /var/lib/postgresql/data
+          resources: 
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+      volumes:
+      - name: db-pv-claim
+        persistentVolumeClaim:
+          claimName: azure-managed-disk

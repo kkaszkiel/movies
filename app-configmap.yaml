@@ -1,0 +1,6 @@
+apiVersion: v1
+data:
+  REACT_APP_API_URL: http://api.kkaszkiel.pl/api/movies
+kind: ConfigMap
+metadata:
+  name: app-configmap
