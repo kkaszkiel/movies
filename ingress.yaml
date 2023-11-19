@@ -1,8 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: movies-ingress
+ annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+ name: movies-ingress
 spec:
+  tls:
+  - hosts:
+    - app.kkaszkiel.pl
+    - api.kkaszkiel.pl
+    secretName: tls-secret
   ingressClassName: nginx
   rules:
     - host: app.kkaszkiel.pl
