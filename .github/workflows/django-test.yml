@@ -10,6 +10,11 @@ on:
     paths:
       - "movies_api/**"
 
+env:
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_DB: postgres
+
 jobs:
   test:
     runs-on: ubuntu-20.04
@@ -19,11 +24,6 @@ jobs:
     services:
       postgres:
         image: postgres:16-alpine
-
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
 
         options: >-
           --health-cmd pg_isready
@@ -41,8 +41,4 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
-      env:
-        POSTGRES_NAME: ${{ POSTGRES_DB }}
-        POSTGRES_USER: ${{ POSTGRES_USER }}
-        POSTGRES_PASSWORD: ${{ POSTGRES_PASSWORD}}
       run: python manage.py test
