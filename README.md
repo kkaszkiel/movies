@@ -48,9 +48,35 @@ The app and api services are exposed to the internet using Ingress. Before runni
 
 The public ip address assigned to the ingress controller must be added as new A records for your own domain
 
-In the ingress.yaml, api-configmap.yaml and app-configmap.yaml files, change the domain name
+In the ingress.yaml, api-configmap.yaml and app-configmap.yaml, cluster-issuer.yaml files, change the domain name
 
 ```
+
+#Create an ingress controller
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+  --create-namespace \
+  --namespace ingress-basic \
+  --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz
+
+
+# Use TLS with an ingress controller
+
+helm repo add jetstack https://charts.jetstack.io
+
+helm repo update
+
+helm install \
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.13.2 \
+  --set installCRDs=true
+
+# create resources
+
 kubectl apply -f . 
 
 
