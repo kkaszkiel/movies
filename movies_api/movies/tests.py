@@ -11,6 +11,7 @@ class MoviesAPITestCase(TestCase):
         # Create some sample movies for testing
         self.movie1 = Movie.objects.create(title='My film 1',director='Joe Doe',year=2020)
         self.movie2 = Movie.objects.create(title='My film 2',director='Doe Joe',year=2021)
+        self.movie3 = Movie.objects.create(title='My film 2',director='Doe Joe',year=2021)
 
     def test_movies_list_view(self):
         url = reverse('movie-list')
