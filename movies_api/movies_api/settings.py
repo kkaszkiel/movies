@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,13 +22,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+secret_key_env = os.getenv('DJANGO_SECRET_KEY')
+
+if secret_key_env:
+    SECRET_KEY = secret_key_env
+else:
+    SECRET_KEY = "mxmuhalrdp!4@5)*=p%qo8_ixvs4n^m=td+g8y%-p&pl-jnofd"
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG') == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split()
 
+allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS")
+
+if allowed_hosts_env:
+
+    ALLOWED_HOSTS = allowed_hosts_env.split()
+else:
+    # Set a default value or handle the absence of the environment variable
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -78,6 +92,7 @@ WSGI_APPLICATION = 'movies_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -86,8 +101,24 @@ DATABASES = {
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': os.environ.get('POSTGRES_HOST'), 
         'PORT': os.environ.get('POSTGRES_PORT')
+    },
+
+
+}
+# for testing
+if 'test' in sys.argv or 'test_coverage' in sys.argv:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1', 
+        'PORT': '5432'
     }
 }
+
+
 
 
 # Password validation
@@ -110,7 +141,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS').split(',')
+
+
+cors_allowed_env = os.environ.get("CORS_ALLOWED_ORIGINS")
+
+
+if cors_allowed_env:
+    CORS_ALLOWED_ORIGINS = cors_allowed_env.split(',')
+else:
+    # Set a default value or handle the absence of the environment variable
+    CORS_ALLOWED_ORIGINS= ['http://localhost:3000']
 
 
 REST_FRAMEWORK = {
