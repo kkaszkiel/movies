@@ -1,4 +1,4 @@
-name: Django CI
+name: Api unit tests
 
 on:
   push:

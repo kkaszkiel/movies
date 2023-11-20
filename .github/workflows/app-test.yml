@@ -1,0 +1,27 @@
+name: App unit tests
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - "movies-app/**"
+  pull_request:
+    branches: [ master ]
+    paths:
+      - "movies-app/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./movies-app
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.8.1'
+      - run: npm install
+      - run: npm test
