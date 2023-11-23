@@ -1,0 +1,28 @@
+name: End-to-end tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build and run docker containers
+      run: docker-compose up --build -d
+      
+    - name: Wait for container to be ready
+      run: |
+        while ! curl -s http://localhost:8000 > /dev/null; do
+          echo "Waiting for docker containers..."
+          sleep 5
+        done
+      shell: bash
+
+    - name: Cypress run
+      uses: cypress-io/github-action@v6
