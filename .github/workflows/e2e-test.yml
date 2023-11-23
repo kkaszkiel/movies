@@ -24,15 +24,7 @@ jobs:
         done
       shell: bash
 
-    - name: Cypress run
-      uses: cypress-io/github-action@v6
-      with:
-          # just perform install
-          runTests: false
     - name: Run e2e tests
       uses: cypress-io/github-action@v6
       with:
-          # we have already installed all dependencies above
-          install: false
-          # Cypress tests and config file are in "e2e" folder
           working-directory: movies-app
